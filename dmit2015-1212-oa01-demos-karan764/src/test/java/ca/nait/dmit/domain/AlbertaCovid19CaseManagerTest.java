@@ -1,5 +1,6 @@
 package ca.nait.dmit.domain;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
@@ -33,5 +34,9 @@ class AlbertaCovid19CaseManagerTest {
         ahsZoneList.forEach(System.out::println);
         assertEquals(6, ahsZoneList.size());
     }
+    @Test
+    @DisplayName("ActiveCasesAgeGroup")
+    void ActiveCasesAgeGroup() {
 
+    }
 }
