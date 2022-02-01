@@ -1,7 +1,4 @@
-
-
 package dmit2015.entity;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -15,6 +12,8 @@ import java.time.LocalDateTime;
 
 /**
  * The persistent class for the movies database table.
+ *
+ * Example taken from https://docs.microsoft.com/en-us/aspnet/core/tutorials/razor-pages/validation?view=aspnetcore-6.0&tabs=visual-studio#validation-1
  */
 @Getter
 @Setter
@@ -42,9 +41,9 @@ public class Movie implements Serializable {
 
     @Column(nullable = false, length = 30)
     @NotBlank(message = "The field Genre is required.")
-    @Pattern(regexp = "^[A-Z]+[a-zA-Z]\\s*$",  // Must only use letters.
+    @Pattern(regexp = "^[A-Z]+[a-zA-Z\\s]*$",  // Must only use letters.
             // The first letter is required to be uppercase. White space, numbers, and special characters are not allowed.
-            message = "The field Genre must match the regular expression '^[A-Z]+[a-zA-Z]\\s*$'.")
+            message = "The field Genre must match the regular expression '^[A-Z]+[a-zA-Z\\s]*$'.")
     private String genre;
 
     @Column(nullable = false, length = 5)
@@ -53,7 +52,6 @@ public class Movie implements Serializable {
             // Allows special characters and numbers in subsequent spaces. PG-13 is valid but fails for a Genre
             message = "The field Rating must match the regular expression '^[A-Z]+[a-zA-Z0-9\"\"'\\s-]*$'.")
     private String rating;      // G, PG, PG-13, R, NC-17
-
 
     @Version
     private Integer version;
@@ -76,4 +74,3 @@ public class Movie implements Serializable {
     }
 
 }
-
