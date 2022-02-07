@@ -16,6 +16,8 @@ curl -k -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/hellowor
         curl -k -i -X GET https://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/helloworld -H 'Accept: text/html'
         curl -k -i -X GET https://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/helloworld -H 'Accept: application/json'
         */
+
+
 @RequestScoped
 @Path("/helloworld")
 public class HelloWorldResource {
@@ -41,14 +43,17 @@ public class HelloWorldResource {
     }
 
     @Path("/image")
-    @GET
-    @Produces("text/image")
+    @GET    @Produces("image/png")
     public Response helloImage(@Context HttpServletRequest request) {
-//        InputStream is = getClass().getResourceAsStream("/images/hello_world.png");
-        File imageFile = new File("src/main/resources/META-INF/images/hello_world.png");
-        return Response
-                .ok(imageFile)
-                .header("Content-Disposition", "attachment; filename=hello_world.png")
+        InputStream is = getClass().getResourceAsStream("/images/hello_world.png");
+        return Response                .ok(is)
+                .header("Content-Disposition","attachment; filename=hello_world.png")
                 .build();
-    }
+
+//        File imageFile = new File("/home/user2015/Pictures/hello_world.png");
+//        return Response
+//                .ok(imageFile)
+//                .header("Content-Disposition","attachment; filename=hello_world.png")
+//                .build();
+        }
 }
