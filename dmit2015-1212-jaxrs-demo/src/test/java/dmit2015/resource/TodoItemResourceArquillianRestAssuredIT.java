@@ -1,15 +1,29 @@
-
-
 package dmit2015.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dmit2015.entity.TodoItem;
+import dmit2015.repository.TodoItemRepository;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.junit5.ArquillianExtension;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -20,22 +34,58 @@ import static org.junit.jupiter.api.Assertions.*;
  * https://github.com/rest-assured/rest-assured/wiki/Usage
  * http://www.mastertheboss.com/jboss-frameworks/resteasy/restassured-tutorial
  * https://github.com/FasterXML/jackson-databind
+ *
  */
-
-// Make sure the server is running before running the test.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class TodoItemResourceRestAssuredIT {
+@ExtendWith(ArquillianExtension.class)                  // Run with JUnit 5 instead of JUnit 4
+public class TodoItemResourceArquillianRestAssuredIT {
+
+    static String mavenArtifactIdId;
+    static String resourceUrl;
+    static final String todoItemResourcePath = "webapi/TodoItems";
+
+    @Deployment
+    public static WebArchive createDeployment() throws IOException, XmlPullParserException {
+        PomEquippedResolveStage pomFile = Maven.resolver().loadPomFromFile("pom.xml");
+        MavenXpp3Reader reader = new MavenXpp3Reader();
+        Model model = reader.read(new FileReader("pom.xml"));
+        mavenArtifactIdId = model.getArtifactId();
+        resourceUrl = String.format("http://localhost:8080/%s/%s", mavenArtifactIdId, todoItemResourcePath);
+        final String archiveName = model.getArtifactId() + ".war";
+        return ShrinkWrap.create(WebArchive.class,archiveName)
+                .addAsLibraries(pomFile.resolve("com.h2database:h2:1.4.200").withTransitivity().asFile())
+                .addAsLibraries(pomFile.resolve("org.hsqldb:hsqldb:2.6.1").withTransitivity().asFile())
+                .addAsLibraries(pomFile.resolve("com.microsoft.sqlserver:mssql-jdbc:10.2.0.jre17").withTransitivity().asFile())
+                .addAsLibraries(pomFile.resolve("com.oracle.database.jdbc:ojdbc11:21.5.0.0").withTransitivity().asFile())
+                .addPackage("common.jpa")
+                .addPackage("common.validator")
+                .addPackage("dmit2015.config")
+                .addClasses(TodoItem.class, TodoItemRepository.class, TodoItemResource.class)
+                .addAsResource("META-INF/persistence.xml")
+                .addAsResource("META-INF/sql/import-data.sql")
+//                .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"))
+                .addAsWebInfResource(EmptyAsset.INSTANCE,"beans.xml");
+    }
+
+    @Test
+    @RunAsClient
+    public void checkSiteIsUp() {
+        given().when().get("https://www.nait.ca/").then().statusCode(200);
+        given().when().get(resourceUrl).then().statusCode(200);
+    }
 
     String testDataResourceLocation;
 
     @Order(1)
     @Test
+    @RunAsClient
     void shouldListAll() throws JsonProcessingException {
         Response response = given()
+        		.urlEncodingEnabled(false)
                 .accept(ContentType.JSON)
                 .when()
-                .get("/dmit2015-1212-jaxrs-demo/webapi/TodoItems")
+                .get(resourceUrl)
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
@@ -43,9 +93,9 @@ class TodoItemResourceRestAssuredIT {
                 .response();
         String jsonBody = response.getBody().asString();
 
-        // Create a new Jsonb instance using the default JsonbBuilder implementation
-        ObjectMapper mapper = new ObjectMapper();
-        List<TodoItem> todos = mapper.readValue(jsonBody, new TypeReference<List<TodoItem>>() { });
+        Jsonb jsonb = JsonbBuilder.create();
+        List<TodoItem> todos = jsonb.fromJson(jsonBody, new ArrayList<TodoItem>(){}.getClass().getGenericSuperclass());
+
         assertEquals(3, todos.size());
         TodoItem firstTodoItem = todos.get(0);
         assertEquals("Todo 1", firstTodoItem.getName());
@@ -59,20 +109,20 @@ class TodoItemResourceRestAssuredIT {
 
     @Order(2)
     @Test
+    @RunAsClient
     void shouldCreate() throws JsonProcessingException {
         TodoItem newTodoItem = new TodoItem();
         newTodoItem.setName("Create REST Assured Integration Test");
         newTodoItem.setComplete(false);
 
-        // Create a new Jsonb instance using the default JsonbBuilder implementation
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonBody = mapper.writeValueAsString(newTodoItem);
+        Jsonb jsonb = JsonbBuilder.create();
+        String jsonBody = jsonb.toJson(newTodoItem);
 
         Response response = given()
                 .contentType(ContentType.JSON)
                 .body(jsonBody)
                 .when()
-                .post("/dmit2015-1212-jaxrs-demo/webapi/TodoItems")
+                .post(resourceUrl)
                 .then()
                 .statusCode(201)
                 .extract()
@@ -82,6 +132,7 @@ class TodoItemResourceRestAssuredIT {
 
     @Order(3)
     @Test
+    @RunAsClient
     void shouldFineOne() throws JsonProcessingException {
         Response response = given()
                 .accept(ContentType.JSON)
@@ -93,9 +144,9 @@ class TodoItemResourceRestAssuredIT {
                 .extract()
                 .response();
         String jsonBody = response.getBody().asString();
-        // Create a new Jsonb instance using the default JsonbBuilder implementation
-        ObjectMapper mapper = new ObjectMapper();
-        TodoItem existingTodoItem = mapper.readValue(jsonBody, TodoItem.class);
+
+        Jsonb jsonb = JsonbBuilder.create();
+        TodoItem existingTodoItem = jsonb.fromJson(jsonBody, TodoItem.class);
 
         assertNotNull(existingTodoItem);
         assertEquals("Create REST Assured Integration Test", existingTodoItem.getName());
@@ -104,6 +155,7 @@ class TodoItemResourceRestAssuredIT {
 
     @Order(4)
     @Test
+    @RunAsClient
     void shouldUpdate() throws JsonProcessingException {
         Response response = given()
                 .accept(ContentType.JSON)
@@ -115,13 +167,15 @@ class TodoItemResourceRestAssuredIT {
                 .extract()
                 .response();
         String jsonBody = response.getBody().asString();
-        ObjectMapper mapper = new ObjectMapper();
-        TodoItem existingTodoItem = mapper.readValue(jsonBody, TodoItem.class);
+
+        Jsonb jsonb = JsonbBuilder.create();
+        TodoItem existingTodoItem = jsonb.fromJson(jsonBody, TodoItem.class);
+
         assertNotNull(existingTodoItem);
         existingTodoItem.setName("Updated Name");
         existingTodoItem.setComplete(true);
 
-        String jsonRequestBody = mapper.writeValueAsString(existingTodoItem);
+        String jsonRequestBody = jsonb.toJson(existingTodoItem);
         given()
                 .contentType(ContentType.JSON)
                 .body(jsonRequestBody)
@@ -133,6 +187,7 @@ class TodoItemResourceRestAssuredIT {
 
     @Order(5)
     @Test
+    @RunAsClient
     void shouldDelete() {
         given()
                 .contentType(ContentType.JSON)

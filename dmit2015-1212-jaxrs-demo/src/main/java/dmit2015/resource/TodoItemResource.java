@@ -1,6 +1,7 @@
 package dmit2015.resource;
 
 import dmit2015.entity.TodoItem;
+import dmit2015.repository.TodoItemRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -27,27 +28,18 @@ import java.util.Optional;
  *                                              "complete":true}
  * 	/webapi/TodoItems/{id}		DELETE			                                            Remove the TodoItem
  *
-
  curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems
---VM IP 192.168.174.128
- curl -i -X GET http://localhost:8080/dmit2015-jaxrs-demo/webapi/TodoItems/1
-
- curl -i -X POST http://localhost:8080//dmit2015-jaxrs-demo/webapi/TodoItems \
+ curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/1
+ curl -i -X POST http://localhost:8080//dmit2015-1212-jaxrs-demo/webapi/TodoItems \
  -d '{"name":"Finish DMIT2015 Assignment 1","complete":false}' \
  -H 'Content-Type:application/json'
-
- curl -i -X GET http://localhost:8080/dmit2015-jaxrs-demo/webapi/TodoItems/4
-
- curl -i -X PUT http://localhost:8080/dmit2015-jaxrs-demo/webapi/TodoItems/4 \
+ curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4
+ curl -i -X PUT http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4 \
  -d '{"id":4,"name":"Demo DMIT2015 Assignment 1","complete":true}' \
  -H 'Content-Type:application/json'
-
- curl -i -X GET http://localhost:8080/dmit2015-jaxrs-demo/webapi/TodoItems/4
-
- curl -i -X DELETE http://localhost:8080/dmit2015-jaxrs-demo/webapi/TodoItems/4
-
- curl -i -X GET http://localhost:8080/dmit2015-jaxrs-demo/webapi/TodoItems/4
-
+ curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4
+ curl -i -X DELETE http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4
+ curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4
  *
  */
 
@@ -69,9 +61,10 @@ public class TodoItemResource {
         if (newTodoItem == null) {
             throw new BadRequestException();
         }
-        try{
-            todoItemRepository.add(newTodoItem);
-        } catch(Exception ex){
+
+        try {
+            todoItemRepository.create(newTodoItem);
+        } catch (Exception ex) {
             ex.printStackTrace();
             return Response
                     .serverError()
@@ -86,7 +79,7 @@ public class TodoItemResource {
     @GET    // GET: /webapi/TodoItems/5
     @Path("{id}")
     public Response getTodoItem(@PathParam("id") Long id) {
-        Optional<TodoItem> optionalTodoItem = todoItemRepository.findById(id);
+        Optional<TodoItem> optionalTodoItem = todoItemRepository.findOptional(id);
 
         if (optionalTodoItem.isEmpty()) {
             throw new NotFoundException();
@@ -98,7 +91,7 @@ public class TodoItemResource {
 
     @GET    // GET: /webapi/TodoItems
     public Response getTodoItems() {
-        return Response.ok(todoItemRepository.findAll()).build();
+        return Response.ok(todoItemRepository.list()).build();
     }
 
     @PUT    // PUT: /webapi/TodoItems/5
@@ -108,7 +101,7 @@ public class TodoItemResource {
             throw new BadRequestException();
         }
 
-        Optional<TodoItem> optionalTodoItem = todoItemRepository.findById(id);
+        Optional<TodoItem> optionalTodoItem = todoItemRepository.findOptional(id);
 
         if (optionalTodoItem.isEmpty()) {
             throw new NotFoundException();
@@ -121,7 +114,7 @@ public class TodoItemResource {
     @DELETE // DELETE: /webapi/TodoItems/5
     @Path("{id}")
     public Response deleteTodoItem(@PathParam("id") Long id) {
-        Optional<TodoItem> optionalTodoItem = todoItemRepository.findById(id);
+        Optional<TodoItem> optionalTodoItem = todoItemRepository.findOptional(id);
 
         if (optionalTodoItem.isEmpty()) {
             throw new NotFoundException();
@@ -133,4 +126,3 @@ public class TodoItemResource {
     }
 
 }
-
