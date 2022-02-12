@@ -1,9 +1,11 @@
 package dmit2015.resource;
 
+import common.validator.BeanValidator;
 import dmit2015.entity.TodoItem;
 import dmit2015.repository.TodoItemRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -28,18 +30,27 @@ import java.util.Optional;
  *                                              "complete":true}
  * 	/webapi/TodoItems/{id}		DELETE			                                            Remove the TodoItem
  *
+
  curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems
+
  curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/1
+
  curl -i -X POST http://localhost:8080//dmit2015-1212-jaxrs-demo/webapi/TodoItems \
  -d '{"name":"Finish DMIT2015 Assignment 1","complete":false}' \
  -H 'Content-Type:application/json'
+
  curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4
+
  curl -i -X PUT http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4 \
  -d '{"id":4,"name":"Demo DMIT2015 Assignment 1","complete":true}' \
  -H 'Content-Type:application/json'
+
  curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4
+
  curl -i -X DELETE http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4
+
  curl -i -X GET http://localhost:8080/dmit2015-1212-jaxrs-demo/webapi/TodoItems/4
+
  *
  */
 
@@ -57,9 +68,17 @@ public class TodoItemResource {
     private TodoItemRepository todoItemRepository;
 
     @POST   // POST: /webapi/TodoItems
-    public Response postTodoItem(@Valid TodoItem newTodoItem) {
+    public Response postTodoItem(TodoItem newTodoItem) {
         if (newTodoItem == null) {
             throw new BadRequestException();
+        }
+
+        String errorMessage = BeanValidator.validateBean(TodoItem.class, newTodoItem);
+        if (errorMessage != null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(errorMessage)
+                    .build();
         }
 
         try {
@@ -96,7 +115,7 @@ public class TodoItemResource {
 
     @PUT    // PUT: /webapi/TodoItems/5
     @Path("{id}")
-    public Response updateTodoItem(@PathParam("id") Long id, @Valid TodoItem updatedTodoItem) {
+    public Response updateTodoItem(@PathParam("id") Long id, TodoItem updatedTodoItem) {
         if (!id.equals(updatedTodoItem.getId())) {
             throw new BadRequestException();
         }
@@ -106,8 +125,34 @@ public class TodoItemResource {
         if (optionalTodoItem.isEmpty()) {
             throw new NotFoundException();
         }
-        todoItemRepository.update(updatedTodoItem);
 
+        String errorMessage = BeanValidator.validateBean(TodoItem.class, updatedTodoItem);
+        if (errorMessage != null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(errorMessage)
+                    .build();
+        }
+
+        TodoItem existingTodoItem = optionalTodoItem.get();
+        existingTodoItem.setName(updatedTodoItem.getName());
+        existingTodoItem.setComplete(updatedTodoItem.isComplete());
+        existingTodoItem.setVersion(updatedTodoItem.getVersion());
+
+        try {
+            todoItemRepository.update(existingTodoItem);
+        } catch (OptimisticLockException ex) {
+//            throw new BadRequestException("Data has been updated since last fetch request. Do another fetch request to get the new data.");
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("You are trying to update a record that has changed since you fetch it.")
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.serverError()
+                    .entity(e.getMessage())
+                    .build();
+        }
         return Response.ok(updatedTodoItem).build();
     }
 
@@ -120,9 +165,10 @@ public class TodoItemResource {
             throw new NotFoundException();
         }
 
-        todoItemRepository.remove(id);
+        todoItemRepository.delete(id);
 
         return Response.noContent().build();
     }
 
 }
+
