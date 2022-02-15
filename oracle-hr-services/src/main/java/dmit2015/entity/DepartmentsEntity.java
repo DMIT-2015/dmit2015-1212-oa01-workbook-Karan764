@@ -3,9 +3,8 @@ package dmit2015.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "DEPARTMENTS", schema = "HR", catalog = "")
+@Table(name = "DEPARTMENTS", schema = "HR")
 public class DepartmentsEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "DEPARTMENT_ID", nullable = false, precision = 0)
     private Short departmentId;

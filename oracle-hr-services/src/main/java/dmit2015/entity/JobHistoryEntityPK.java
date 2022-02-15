@@ -11,11 +11,11 @@ import java.sql.Date;
 public class JobHistoryEntityPK implements Serializable {
     @Column(name = "EMPLOYEE_ID", nullable = false, precision = 0)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer employeeId;
     @Column(name = "START_DATE", nullable = false)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Date startDate;
 
     public Integer getEmployeeId() {

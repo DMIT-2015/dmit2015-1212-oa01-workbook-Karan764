@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import java.math.BigInteger;
 
 @Entity
-@Table(name = "COUNTRIES", schema = "HR", catalog = "")
+@Table(name = "COUNTRIES", schema = "HR")
 public class CountriesEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "COUNTRY_ID", nullable = false, length = 2)
     private String countryId;

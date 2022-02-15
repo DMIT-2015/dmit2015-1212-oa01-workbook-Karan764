@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "LOCATIONS", schema = "HR", catalog = "")
+@Table(name = "LOCATIONS", schema = "HR")
 public class LocationsEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "LOCATION_ID", nullable = false, precision = 0)
     private Short locationId;

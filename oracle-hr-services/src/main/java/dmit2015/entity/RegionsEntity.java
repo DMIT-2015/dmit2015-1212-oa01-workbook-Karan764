@@ -6,9 +6,9 @@ import java.math.BigInteger;
 import java.util.Collection;
 
 @Entity
-@Table(name = "REGIONS", schema = "HR", catalog = "")
+@Table(name = "REGIONS", schema = "HR")
 public class RegionsEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "REGION_ID", nullable = false, precision = 0)
     private BigInteger regionId;

@@ -5,14 +5,14 @@ import jakarta.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "JOB_HISTORY", schema = "HR", catalog = "")
+@Table(name = "JOB_HISTORY", schema = "HR")
 @IdClass(JobHistoryEntityPK.class)
 public class JobHistoryEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "EMPLOYEE_ID", nullable = false, precision = 0)
     private Integer employeeId;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "START_DATE", nullable = false)
     private Date startDate;
