@@ -37,7 +37,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 //		password="Password2015"),
 
 	@DataSourceDefinition(
-		name="java:app/datasources/oracleHrDS",
+		name="java:app/datasources/oracleHrDs",
 		className="oracle.jdbc.xa.client.OracleXADataSource",
 		url="jdbc:oracle:thin:@localhost:1521/xepdb1",
 		user="hr",

@@ -2,6 +2,7 @@ package dmit2015.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -20,6 +21,16 @@ public class DepartmentsEntity {
     @Basic
     @Column(name = "LOCATION_ID", nullable = true, precision = 0)
     private Short locationId;
+    @ManyToOne
+    @JoinColumn(insertable = false, updatable = false, name = "MANAGER_ID", referencedColumnName = "EMPLOYEE_ID")
+    private EmployeesEntity employeesByManagerId;
+    @ManyToOne
+    @JoinColumn(insertable = false, updatable = false, name = "LOCATION_ID", referencedColumnName = "LOCATION_ID")
+    private LocationsEntity locationsByLocationId;
+    @OneToMany(mappedBy = "departmentsByDepartmentId")
+    private Collection<EmployeesEntity> employeesByDepartmentId;
+    @OneToMany(mappedBy = "departmentsByDepartmentId")
+    private Collection<JobHistoryEntity> jobHistoriesByDepartmentId;
 
     public Short getDepartmentId() {
         return departmentId;
@@ -64,5 +75,37 @@ public class DepartmentsEntity {
     @Override
     public int hashCode() {
         return Objects.hash(departmentId, departmentName, managerId, locationId);
+    }
+
+    public EmployeesEntity getEmployeesByManagerId() {
+        return employeesByManagerId;
+    }
+
+    public void setEmployeesByManagerId(EmployeesEntity employeesByManagerId) {
+        this.employeesByManagerId = employeesByManagerId;
+    }
+
+    public LocationsEntity getLocationsByLocationId() {
+        return locationsByLocationId;
+    }
+
+    public void setLocationsByLocationId(LocationsEntity locationsByLocationId) {
+        this.locationsByLocationId = locationsByLocationId;
+    }
+
+    public Collection<EmployeesEntity> getEmployeesByDepartmentId() {
+        return employeesByDepartmentId;
+    }
+
+    public void setEmployeesByDepartmentId(Collection<EmployeesEntity> employeesByDepartmentId) {
+        this.employeesByDepartmentId = employeesByDepartmentId;
+    }
+
+    public Collection<JobHistoryEntity> getJobHistoriesByDepartmentId() {
+        return jobHistoriesByDepartmentId;
+    }
+
+    public void setJobHistoriesByDepartmentId(Collection<JobHistoryEntity> jobHistoriesByDepartmentId) {
+        this.jobHistoriesByDepartmentId = jobHistoriesByDepartmentId;
     }
 }

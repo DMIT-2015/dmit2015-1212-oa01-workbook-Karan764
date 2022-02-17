@@ -10,9 +10,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "EMPLOYEES", schema = "HR")
 public class EmployeesEntity implements Serializable {
-    public String getFullName(){
-        return String.format("%s %s", firstName, lastName);
-    }
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "EMPLOYEE_ID", nullable = false, precision = 0)
@@ -50,18 +47,22 @@ public class EmployeesEntity implements Serializable {
     @OneToMany(mappedBy = "employeesByManagerId")
     private Collection<DepartmentsEntity> departmentsByEmployeeId;
     @ManyToOne
-    @JoinColumn(name = "JOB_ID", referencedColumnName = "JOB_ID", nullable = false)
+    @JoinColumn(insertable = false, updatable = false, name = "JOB_ID", referencedColumnName = "JOB_ID", nullable = false)
     private JobsEntity jobsByJobId;
     @ManyToOne
-    @JoinColumn(name = "MANAGER_ID", referencedColumnName = "EMPLOYEE_ID")
+    @JoinColumn(insertable = false, updatable = false, name = "MANAGER_ID", referencedColumnName = "EMPLOYEE_ID")
     private EmployeesEntity employeesByManagerId;
     @OneToMany(mappedBy = "employeesByManagerId")
     private Collection<EmployeesEntity> employeesByEmployeeId;
     @ManyToOne
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
+    @JoinColumn(insertable = false, updatable = false, name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     private DepartmentsEntity departmentsByDepartmentId;
     @OneToMany(mappedBy = "employeesByEmployeeId")
     private Collection<JobHistoryEntity> jobHistoriesByEmployeeId;
+
+    public String getFullName(){
+        return String.format("%s %s", firstName, lastName);
+    }
 
     public Integer getEmployeeId() {
         return employeeId;

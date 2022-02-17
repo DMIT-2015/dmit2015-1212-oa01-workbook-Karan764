@@ -27,13 +27,13 @@ public class JobHistoryEntity {
     @Column(name = "DEPARTMENT_ID", nullable = true, precision = 0)
     private Short departmentId;
     @ManyToOne
-    @JoinColumn(name = "EMPLOYEE_ID", referencedColumnName = "EMPLOYEE_ID", nullable = false)
+    @JoinColumn(insertable = false, updatable = false, name = "EMPLOYEE_ID", referencedColumnName = "EMPLOYEE_ID", nullable = false)
     private EmployeesEntity employeesByEmployeeId;
     @ManyToOne
-    @JoinColumn(name = "JOB_ID", referencedColumnName = "JOB_ID", nullable = false)
+    @JoinColumn(insertable = false, updatable = false, name = "JOB_ID", referencedColumnName = "JOB_ID", nullable = false)
     private JobsEntity jobsByJobId;
     @ManyToOne
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
+    @JoinColumn(insertable = false, updatable = false, name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     private DepartmentsEntity departmentsByDepartmentId;
 
     public Integer getEmployeeId() {

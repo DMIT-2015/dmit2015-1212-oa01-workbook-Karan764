@@ -20,7 +20,7 @@ public class CountriesEntity {
     @Column(name = "REGION_ID", nullable = true, precision = 0)
     private BigInteger regionId;
     @ManyToOne
-    @JoinColumn(name = "REGION_ID", referencedColumnName = "REGION_ID")
+    @JoinColumn(insertable = false, updatable = false, name = "REGION_ID", referencedColumnName = "REGION_ID")
     private RegionsEntity regionsByRegionId;
     @OneToMany(mappedBy = "countriesByCountryId")
     private Collection<LocationsEntity> locationsByCountryId;

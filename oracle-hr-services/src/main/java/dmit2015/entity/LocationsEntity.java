@@ -31,7 +31,7 @@ public class LocationsEntity implements Serializable {
     @OneToMany(mappedBy = "locationsByLocationId")
     private Collection<DepartmentsEntity> departmentsByLocationId;
     @ManyToOne
-    @JoinColumn(name = "COUNTRY_ID", referencedColumnName = "COUNTRY_ID")
+    @JoinColumn(insertable = false, updatable = false, name = "COUNTRY_ID", referencedColumnName = "COUNTRY_ID")
     private CountriesEntity countriesByCountryId;
 
     public Short getLocationId() {
