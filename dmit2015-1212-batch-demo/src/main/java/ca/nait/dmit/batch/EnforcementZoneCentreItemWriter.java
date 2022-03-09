@@ -17,9 +17,10 @@ public class EnforcementZoneCentreItemWriter extends AbstractItemWriter {
 
     @PersistenceContext(unitName = "mssql-jpa-pu")
     private EntityManager _entityManager;
+
     @Override
     public void writeItems(List<Object> items) throws Exception {
-        for(Object currentItem: items){
+        for (Object currentItem : items) {
             EnforcementZoneCentre entity = (EnforcementZoneCentre) currentItem;
             _entityManager.persist(entity);
         }

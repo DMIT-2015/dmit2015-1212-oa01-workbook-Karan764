@@ -13,30 +13,45 @@ import java.nio.file.Paths;
 
 @Named
 public class EnforcementZoneCentreItemReader extends AbstractItemReader {
+
     @Inject
     private JobContext _jobContext;
 
     private BufferedReader _reader;
 
     @Inject
-    @BatchProperty(name = "input-file")
+    @BatchProperty(name = "input_file")
     private String inputFile;
+
+    private int _itemCount = 0;
+
+    @Inject
+    @BatchProperty(name = "max_results")
+    private int _maxResults;
+
 
     @Override
     public void open(Serializable checkpoint) throws Exception {
         super.open(checkpoint);
 
         _reader = new BufferedReader(new FileReader(Paths.get(inputFile).toFile()));
-        //Read the first line to skip the header now
+        // Read the first line to skip the header row
         _reader.readLine();
+
+        _itemCount = 0;
     }
 
     @Override
     public Object readItem() throws Exception {
-        try{
+        try {
             String line = _reader.readLine();
-            return line;
-        } catch(Exception ex) {
+            _itemCount += 1;
+            if (_maxResults == 0 || _itemCount <= _maxResults) {
+                return line;
+            } else {
+                return null;
+            }
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;

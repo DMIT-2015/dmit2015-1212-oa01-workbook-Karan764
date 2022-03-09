@@ -1,0 +1,13 @@
+### Send an email
+
+# curl -i -X POST http://localhost:8080/contextPath/webapi/mail
+#        -d '{"mailToAddresses":"usename@nait.ca", "mailSubject": "DMIT2015 WildFly mail subsystem", "mailText": "This email was sent using the Wildfly mail subsystem and a statless session bean."},'
+#        -H 'Content-Type:application/json'
+POST http://localhost:8080/dmit2015-1212-timer-demo/webapi/mail
+Content-Type: application/json
+
+{
+  "mailToAddresses": "swu@nait.ca",
+  "mailSubject": "Extra marks for email right??",
+  "mailText": "This email was sent using the Wildfly mail subsystem and a statless session bean."
+}
