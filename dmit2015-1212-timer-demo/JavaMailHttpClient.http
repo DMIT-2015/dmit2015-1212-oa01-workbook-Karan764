@@ -1,3 +1,6 @@
+### GET hello-world
+GET http://localhost:8080/webapi/hello-world
+
 ### Send an email
 
 # curl -i -X POST http://localhost:8080/contextPath/webapi/mail
