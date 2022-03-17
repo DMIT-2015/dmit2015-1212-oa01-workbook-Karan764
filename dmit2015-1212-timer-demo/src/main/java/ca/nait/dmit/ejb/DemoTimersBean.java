@@ -8,6 +8,7 @@ import jakarta.batch.runtime.BatchStatus;
 import jakarta.batch.runtime.JobExecution;
 import jakarta.ejb.*;
 import jakarta.inject.Inject;
+import jakarta.mail.MessagingException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
@@ -92,20 +93,40 @@ public class DemoTimersBean {        // Also known as Calendar-Based Timers
         EnforcementZoneCentreRepository enforcementZoneCentreRepository;
 
         @Timeout
-        public void checkBatchJobStatus(Timer timer) {
-                // Extract the jobId from the timer
-                long jobId = (long) timer.getInfo();
-                JobOperator jobOperator = BatchRuntime.getJobOperator();
-                JobExecution jobExecution = jobOperator.getJobExecution(jobId);
-                if (jobExecution.getBatchStatus() == BatchStatus.COMPLETED) {
-                        timer.cancel();
-                        // send email to notified batch job has completed
-                        List<EnforcementZoneCentre> entities = enforcementZoneCentreRepository.list();
+        public void checkBatchJobStatus(Timer timer) throws MessagingException {
+                try{
+                        // Extract the jobId from the timer
+                        long jobId = (long) timer.getInfo();
+                        JobOperator jobOperator = BatchRuntime.getJobOperator();
+                        JobExecution jobExecution = jobOperator.getJobExecution(jobId);
+                        if (jobExecution.getBatchStatus() == BatchStatus.COMPLETED) {
+                                timer.cancel();
+                                _logger.info("BATCH job" + jobId + "COMPLETED");
+                                // send email to notified batch job has completed
+                                List<EnforcementZoneCentre> entities = enforcementZoneCentreRepository.list();
+                                StringBuilder stringBuilder = new StringBuilder();
+                                for(var currentItem : entities){
+                                        String lineText = String.format("%s %s %s\n", currentItem.getSiteId(), currentItem.getLocationDescription(), currentItem.getSpeedLimit());
+                                        stringBuilder.append(lineText);
 
-                } else if (jobExecution.getBatchStatus() == BatchStatus.FAILED) {
-                        // send email to notified batch job has failed
-                        timer.cancel();
+                                }
+                                String mailBody = stringBuilder.toString();
+                                mail.sendTextEmail(mailToAddress, "Batch Job Completed", mailBody);
+
+                        } else if (jobExecution.getBatchStatus() == BatchStatus.FAILED) {
+                                // send email to notified batch job has failed
+                                timer.cancel();
+                        }
+                } catch (Exception ex){
+                        ex.printStackTrace();
+                        try{
+                                mail.sendTextEmail(mailToAddress, "Batch Job Exception", ex.getMessage());
+                        }
+                        catch (Exception e){
+                                e.printStackTrace();
+                        }
                 }
+
         }
 
 }
