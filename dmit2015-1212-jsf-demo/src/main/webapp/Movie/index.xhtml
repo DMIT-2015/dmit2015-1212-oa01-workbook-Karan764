@@ -46,12 +46,14 @@
                     <h:outputText value="#{currentItem.rating}"/>
                 </p:column>
                 <p:column headerText="Price">
-                    <h:outputText value="#{currentItem.price}"/>
+                    <h:outputText value="#{currentItem.price}">
                     <f:convertNumber type="currency"></f:convertNumber>
+                </h:outputText>
                 </p:column>
-                <p:column headerText="Relese">
-                    <h:outputText value="#{currentItem.releaseDate}"/>
+                <p:column headerText="Release">
+                    <h:outputText value="#{currentItem.releaseDate}">
                     <f:convertNumber type="localDate" pattern="MMM dd, yyyy"></f:convertNumber>
+                    </h:outputText>
                 </p:column>
 
 
