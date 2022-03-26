@@ -36,49 +36,52 @@
                 <p:column headerText="ID">
                     <h:outputText value="#{currentItem.id}"/>
                 </p:column>
+
                 <p:column headerText="Title">
                     <h:outputText value="#{currentItem.title}"/>
                 </p:column>
+
+                <p:column headerText="Rating">
+                    <h:outputText value="#{currentItem.rating}"/>
+                </p:column>
+
                 <p:column headerText="Genre">
                     <h:outputText value="#{currentItem.genre}"/>
                 </p:column>
-                <p:column headerText="rating">
-                    <h:outputText value="#{currentItem.rating}"/>
-                </p:column>
+
                 <p:column headerText="Price">
                     <h:outputText value="#{currentItem.price}">
-                    <f:convertNumber type="currency"></f:convertNumber>
-                </h:outputText>
-                </p:column>
-                <p:column headerText="Release">
-                    <h:outputText value="#{currentItem.releaseDate}">
-                    <f:convertNumber type="localDate" pattern="MMM dd, yyyy"></f:convertNumber>
+                        <f:convertNumber type="currency" />
                     </h:outputText>
                 </p:column>
 
+                <p:column headerText="Release">
+                    <h:outputText value="#{currentItem.releaseDate}">
+                        <f:convertDateTime type="localDate" pattern="MMM dd, yyyy" />
+                    </h:outputText>
+                </p:column>
 
                 <p:column headerText="Action">
+                    <p:link id="editLink" outcome="edit" value="edit">
+                        <f:param name="editId" value="#{currentItem.id}"/>
+                    </p:link>
 
-                        <p:link id="editLink" outcome="edit" value="edit">
-                            <f:param name="editId" value="#{currentItem.id}"/>
-                        </p:link>
+                    |
+
+                    <p:link id="detailsLink" outcome="details" value="details">
+                        <f:param name="editId" value="#{currentItem.id}"/>
+                    </p:link>
 
 
-                        |
+                    |
 
-                        <p:link id="detailsLink" outcome="details" value="details">
-                            <f:param name="editId" value="#{currentItem.id}"/>
-                        </p:link>
-
-                        |
-
-                        <p:link id="deleteLink" outcome="delete" value="delete">
-                            <f:param name="editId" value="#{currentItem.id}"/>
-                        </p:link>
+                    <p:link id="deleteLink" outcome="delete" value="delete">
+                        <f:param name="editId" value="#{currentItem.id}"/>
+                    </p:link>
                     <f:verbatim>
                     </f:verbatim>
-
                 </p:column>
+
 
             </p:dataTable>
 

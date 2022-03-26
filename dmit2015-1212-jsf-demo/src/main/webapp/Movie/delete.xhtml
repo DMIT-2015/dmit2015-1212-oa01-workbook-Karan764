@@ -33,16 +33,59 @@
                     <h:outputText value="#{currentMovieDeleteController.editId}"/>
 
                     <h:panelGroup>
-                        <strong><h:outputText value="PropertyName"/></strong>
+                        <strong><h:outputText value="Title"/></strong>
                     </h:panelGroup>
-                    <h:outputText value="#{currentMovieDeleteController.existingMovie.propertyName}"/>
+                    <h:outputText value="#{currentMovieDeleteController.existingMovie.title}"/>
 
-                    <!-- TODO: Add rows for the properties of the entity -->
+                    <h:panelGroup>
+                        <strong><h:outputText value="Release Date"/></strong>
+                    </h:panelGroup>
+                    <h:outputText value="#{currentMovieDeleteController.existingMovie.releaseDate}">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                    </h:outputText>
+
+                    <h:panelGroup>
+                        <strong><h:outputText value="Price"/></strong>
+                    </h:panelGroup>
+                    <h:outputText value="#{currentMovieDeleteController.existingMovie.price}">
+                        <f:convertNumber type="currency" />
+                    </h:outputText>
+
+                    <h:panelGroup>
+                        <strong><h:outputText value="Genre"/></strong>
+                    </h:panelGroup>
+                    <h:outputText value="#{currentMovieDeleteController.existingMovie.genre}">
+                    </h:outputText>
+
+                    <h:panelGroup>
+                        <strong><h:outputText value="Rating"/></strong>
+                    </h:panelGroup>
+                    <h:outputText value="#{currentMovieDeleteController.existingMovie.rating}">
+                    </h:outputText>
+
+                    <h:panelGroup>
+                        <strong><h:outputText value="Version"/></strong>
+                    </h:panelGroup>
+                    <h:outputText value="#{currentMovieDeleteController.existingMovie.version}">
+                    </h:outputText>
+
+                    <h:panelGroup>
+                        <strong><h:outputText value="Created"/></strong>
+                    </h:panelGroup>
+                    <h:outputText value="#{currentMovieDeleteController.existingMovie.createdDateTime}">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd h:mm:ss a" />
+                    </h:outputText>
+
+                    <h:panelGroup>
+                        <strong><h:outputText value="Last Modified"/></strong>
+                    </h:panelGroup>
+                    <h:outputText value="#{currentMovieDeleteController.existingMovie.lastModifiedDateTime}">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm:ss" />
+                    </h:outputText>
 
                 </p:panelGrid>
 
             </p:panel>
-
 
             <p:commandButton
                     value="Delete"

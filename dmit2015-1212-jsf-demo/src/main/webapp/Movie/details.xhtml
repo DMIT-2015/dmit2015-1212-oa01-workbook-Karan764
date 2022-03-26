@@ -33,16 +33,47 @@
                     <strong><h:outputText value="Release Date"/></strong>
                 </h:panelGroup>
                 <h:outputText value="#{currentMovieDetailsController.existingMovie.releaseDate}">
-                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
-                        </h:outputText>
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                </h:outputText>
 
                 <h:panelGroup>
                     <strong><h:outputText value="Price"/></strong>
                 </h:panelGroup>
                 <h:outputText value="#{currentMovieDetailsController.existingMovie.price}">
-                    <f: convertNumber type="currency" />
+                    <f:convertNumber type="currency" />
                 </h:outputText>
-                <!-- TODO: Add rows for the properties of the entity -->
+
+                <h:panelGroup>
+                    <strong><h:outputText value="Genre"/></strong>
+                </h:panelGroup>
+                <h:outputText value="#{currentMovieDetailsController.existingMovie.genre}">
+                </h:outputText>
+
+                <h:panelGroup>
+                    <strong><h:outputText value="Rating"/></strong>
+                </h:panelGroup>
+                <h:outputText value="#{currentMovieDetailsController.existingMovie.rating}">
+                </h:outputText>
+
+                <h:panelGroup>
+                    <strong><h:outputText value="Version"/></strong>
+                </h:panelGroup>
+                <h:outputText value="#{currentMovieDetailsController.existingMovie.version}">
+                </h:outputText>
+
+                <h:panelGroup>
+                    <strong><h:outputText value="Created"/></strong>
+                </h:panelGroup>
+                <h:outputText value="#{currentMovieDetailsController.existingMovie.createdDateTime}">
+                    <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd h:mm:ss a" />
+                </h:outputText>
+
+                <h:panelGroup>
+                    <strong><h:outputText value="Last Modified"/></strong>
+                </h:panelGroup>
+                <h:outputText value="#{currentMovieDetailsController.existingMovie.lastModifiedDateTime}">
+                    <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm:ss" />
+                </h:outputText>
 
             </p:panelGrid>
 
