@@ -4,6 +4,7 @@ import dmit2015.restclient.Movie;
 import dmit2015.restclient.MovieService;
 import lombok.Getter;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 import jakarta.annotation.PostConstruct;
@@ -30,6 +31,12 @@ public class MovieListController implements Serializable {
     @PostConstruct  // After @Inject is complete
     public void init() {
         try {
+            String remoteIp = Faces.getRemoteAddr();
+            if(remoteIp.equals("127.0.0.1")){
+
+            } else{
+
+            }
             movieMap = _movieService.list();
         } catch (Exception ex) {
             Messages.addGlobalError(ex.getMessage());

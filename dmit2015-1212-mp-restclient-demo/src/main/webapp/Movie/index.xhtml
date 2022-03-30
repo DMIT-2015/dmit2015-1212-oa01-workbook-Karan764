@@ -56,25 +56,26 @@
 
                 </p:column>
                 <!-- TODO: add p:column for the properties of the entity to display -->
-                <f:verbatim>
+
                     <p:column headerText="Title">
                         <p:link id="editLink" outcome="edit" value="edit">
-                            <f:param name="editId" value="#{currentItem.id}"/>
+                            <f:param name="editId" value="#{currentItem.key}"/>
                         </p:link>
-
+                        <f:verbatim>
                         |
 
                         <p:link id="detailsLink" outcome="details" value="details">
-                            <f:param name="editId" value="#{currentItem.id}"/>
+                            <f:param name="editId" value="#{currentItem.key}"/>
                         </p:link>
 
                         |
 
                         <p:link id="deleteLink" outcome="delete" value="delete">
-                            <f:param name="editId" value="#{currentItem.id}"/>
+                            <f:param name="editId" value="#{currentItem.key}"/>
                         </p:link>
+                        </f:verbatim>
                     </p:column>
-                </f:verbatim>
+
 
 
             </p:dataTable>
