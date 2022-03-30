@@ -27,26 +27,54 @@
             <p:panel id="panel" header="Movie Details">
 
                 <div class="field">
-                    <label for="replace-with-1st-editable-field">"replace-with-1st-editable-field</label>
+                    <label for="title">Title</label>
                     <p:inputText
-                            id="replace-with-1st-editable-field"
+                            id="title"
                             type="text"
                             class="inputfield w-full"
-                            value="#{currentMovieCreateController.newMovie.propertyName}">
+                            value="#{currentMovieCreateController.newMovie.title}">
+                    </p:inputText>
+                </div>
+
+                <div class="releaseDate">
+                    <label for="releaseDate">Release Date</label>
+                    <p:inputText
+                            id="releaseDate"
+                            type="text"
+                            class="inputfield w-full"
+                            value="#{currentMovieCreateController.newMovie.releaseDate}">
+                    </p:inputText>
+                </div>
+                <div class="field">
+                    <label for="rating">Rating</label>
+                    <p:inputText
+                            id="rating"
+                            type="text"
+                            class="inputfield w-full"
+                            value="#{currentMovieCreateController.newMovie.rating}">
                     </p:inputText>
                 </div>
 
                 <div class="field">
-                    <label for="replace-with-1st-editable-field">"replace-with-1st-editable-field</label>
+                    <label for="genre">Genre</label>
                     <p:inputText
-                            id="replace-with-2nd-editable-field"
+                            id="genre"
                             type="text"
                             class="inputfield w-full"
-                            value="#{currentMovieCreateController.newMovie.propertyName}">
+                            value="#{currentMovieCreateController.newMovie.genre}">
                     </p:inputText>
                 </div>
 
-                <!-- TODO: Add input fields for the properties of the entity -->
+                <div class="field">
+                    <label for="price">Price</label>
+                    <p:inputText
+                            id="price"
+                            type="text"
+                            class="inputfield w-full"
+                            value="#{currentMovieCreateController.newMovie.price}">
+                    </p:inputText>
+                </div>
+
 
                 <p:commandButton
                         value="Create"
