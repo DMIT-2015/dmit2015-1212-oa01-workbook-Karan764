@@ -39,6 +39,6 @@ public class MovieDetailsController {
     @PostConstruct
     public void init() {
         Movie optionalMovie = _movieService.findbyId(editId);
-        
+
     }
 }
