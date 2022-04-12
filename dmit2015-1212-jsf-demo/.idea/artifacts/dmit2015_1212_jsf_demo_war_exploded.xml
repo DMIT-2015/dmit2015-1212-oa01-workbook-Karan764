@@ -39,6 +39,9 @@
           <element id="library" level="project" name="Maven: org.hibernate.validator:hibernate-validator:7.0.1.Final" />
           <element id="library" level="project" name="Maven: jakarta.validation:jakarta.validation-api:3.0.0" />
           <element id="library" level="project" name="Maven: org.glassfish:jakarta.faces:3.0.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.soteria:jakarta.security.enterprise:2.0.1" />
+          <element id="library" level="project" name="Maven: jakarta.security.enterprise:jakarta.security.enterprise-api:2.0.0" />
+          <element id="library" level="project" name="Maven: jakarta.ejb:jakarta.ejb-api:4.0.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">
